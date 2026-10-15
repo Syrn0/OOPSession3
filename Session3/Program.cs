@@ -1,39 +1,79 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 
 namespace Session03
 {
-
     internal class Program
     {
-
-        Program()
-        {
-           var player1 = new Player("Aria", 100);
-           var player2 = new Player("Bram", 100);
-           var player3 = new Player("Citra", 100);
-
-           Weapon weapon1 = new Weapon("Pedang kayu", 5);
-           Weapon weapon2 = new Weapon("Busur Elf", 12);
-           player3.takeDamage(200);
-
-           player1.showPlayer();
-           player2.showPlayer();
-           player3.showPlayer();
-           Console.WriteLine(player3.isAlive());
-           weapon1.showInfo();
-           weapon2.showInfo();
-        }
-
         static void Main(string[] args)
         {
-           Program p = new Program();
+            Latihan1();
+            Latihan2();
+            Latihan3();
+            Latihan4();
         }
 
-        
+        static void Latihan1()
+        {
+            var hero = new Player("Aria");
+            var slime = new Monster("Slime", 30);
+            hero.Attack(slime);                          Console.WriteLine(slime.Hp);
+            hero.Equip(new Weapon("Busur Elf", 12));
+            hero.Attack(slime);                          Console.WriteLine(slime.Hp);
+        }
 
+        static void Latihan2()
+        {
+            var hero = new Player("Aria");
+            hero.Equip(new Weapon("Pedang Kayu", 5));
+            var slime = new Monster("Slime", 30);
+
+            // loop selama keduanya hidup:
+            while (hero.IsAlive() && slime.IsAlive())
+            {
+                hero.Attack(slime);
+                if (slime.IsAlive())
+                {
+                    slime.Attack(hero);
+                }
+            }
+
+            if (hero.IsAlive())
+            {
+                Console.WriteLine($"{hero.Name} menang! Sisa Hp: {hero.Hp}");
+            }
+            else
+            {
+                Console.WriteLine($"{slime.Name} menang! Sisa Hp: {slime.Hp}");
+            }
+        }
+
+        static void Latihan3()
+        {
+            var hero = new Player("Aria");
+            var slime = new Monster("Slime", 30);
+            var quest = new Quest("Basmi Slime", slime, 50);
+
+            quest.TryComplete();            Console.WriteLine(hero.Gold); 
+            quest.Accept(hero);
+            quest.TryComplete();            Console.WriteLine(hero.Gold); 
+            slime.TakeDamage(30);
+            quest.TryComplete();            Console.WriteLine(hero.Gold);  
+            quest.TryComplete();            Console.WriteLine(hero.Gold);  
+        }
+
+        static void Latihan4()
+        {
+            var hero = new Player("Aria");
+            hero.AddGold(20);
+            var shop = new Shop();
+            var bow = new Weapon("Busur Elf", 12);
+
+            Console.WriteLine(shop.Sell(hero, bow, 30));   
+            Console.WriteLine(hero.Gold);
+            hero.AddGold(15);
+            Console.WriteLine(shop.Sell(hero, bow, 30));   
+            Console.WriteLine(hero.Gold);
+            Console.WriteLine(hero.Equipped?.Name);
+        }
     }
 }

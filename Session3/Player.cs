@@ -1,19 +1,46 @@
-﻿namespace Session03
+namespace Session03
 {
     public class Player
     {
         public string Name { get; }
-        public int Hp { get; set; } = 100;
-        public int gold { get; set; } = 0;
+        public int Hp { get; private set; } = 100;
+        public int Gold { get; private set; } = 0;
 
-        public Player(string name, int hp) { Name = name; Hp = hp; }
+        public Weapon? Equipped { get; private set; }
 
-        public void showPlayer()
+        public Player(string name, int hp = 100) { Name = name; Hp = hp; }
+
+        public void Equip(Weapon w)
         {
-            Console.WriteLine($"{Name}: {Hp}");
+            Equipped = w;
         }
 
-        public void takeDamage(int amount)
+        public void Attack(Monster target)
+        {
+            int damage = 1;
+            if (Equipped != null)
+            {
+                damage = Equipped.Damage;
+            }
+            target.TakeDamage(damage);
+        }
+
+        public void AddGold(int amount)
+        {
+            Gold += amount;
+        }
+
+        public bool TrySpendGold(int amount)
+        {
+            if (Gold < amount)
+            {
+                return false;
+            }
+            Gold -= amount;
+            return true;
+        }
+
+        public void TakeDamage(int amount)
         {
             Hp -= amount;
             if (Hp < 0)
@@ -22,7 +49,11 @@
             }
         }
 
-        public bool isAlive() { return Hp > 0; }
+        public bool IsAlive() => Hp > 0;
 
+        public void showPlayer()
+        {
+            Console.WriteLine($"{Name}: {Hp}");
+        }
     }
 }
